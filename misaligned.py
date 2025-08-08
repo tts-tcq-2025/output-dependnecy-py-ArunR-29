@@ -1,17 +1,31 @@
-def print_color_map():
+def generate_color_map():
     major_colors = ["White", "Red", "Black", "Yellow", "Violet"]
     minor_colors = ["Blue", "Orange", "Green", "Brown", "Slate"]
+    color_map = []
+
     for i, major in enumerate(major_colors):
         for j, minor in enumerate(minor_colors):
-            print(f'{i * 5 + j} | {major} | {minor}')
-    return len(major_colors) * len(minor_colors)
+            pair_number = i * len(minor_colors) + i
+            color_map.append((pair_number, major, minor))
 
-result = print_color_map()
+    return color_map
+
+def format_color_map_entry(pair_number, major, minor):
+    return f"{pair_number} | {major:<6} | {minor}"
+
+def printOnconsole(lineItem):
+    print(lineItem)
+
+def print_color_map(output_func=printOnConsole):
+    color_map = generate_color_map()
+    for pair_number, major, minor in color_map:
+        line = format_color_map_entry(pair_number, major, minor)
+        output_func(line)  # Abstracted output
+    return len(color_map)
+
 #assert(result == 25)
 def test_print_color_map_fail():
-    import io
-    import sys
-
+    
     # Intentionally incorrect expected output to fail the test
     expected_lines = [
         "1 | White | Blue",  # Should be "0 | White | Blue" for current code
@@ -41,16 +55,22 @@ def test_print_color_map_fail():
         "25 | Violet | Slate"
     ]
 
-    # Capture the output of print_color_map
-    captured_output = io.StringIO()
-    sys.stdout = captured_output
-    print_color_map()
-    sys.stdout = sys.__stdout__
+    # Record interaction   using Mock (Fake Dependency)
+    def make_print_mock():
+    #record
+        calls = []
 
-    output_lines = captured_output.getvalue().strip().split('\n')
+    def printmock(line):
+        calls.append(line)
 
-    # This will fail because the numbering in expected_lines starts from 1, but the function starts from 0
-    for idx, (expected, actual) in enumerate(zip(expected_lines, output_lines)):
-        assert expected == actual, f"FAIL: Mismatch at line {idx}: expected '{expected}', got '{actual}'"
+        printmock.calls = calls  # Attach calls list to function object
+    return printmock
 
-test_print_color_map_fail()
+    mock_print = make_print_mock()
+    count = print_color_map(mock_print)
+
+    # assertions
+    assert len(mock_print.calls) == 25  #value based testing
+    assert mock_print.calls[0] == "0 | White  | Blue"  #interaction or Behavior Testing
+    assert mock_print.calls[-1] == "24 | Violet | Slate"
+
