@@ -1,5 +1,11 @@
-
-
+def RealSensor():
+    return {
+        'temperatureInC': 50,
+        'precipitation': 70,
+        'humidity': 26,
+        'windSpeedKMPH': 52
+    }
+# unit test candidate
 def sensorStub():
     return {
         'temperatureInC': 50,
@@ -7,7 +13,6 @@ def sensorStub():
         'humidity': 26,
         'windSpeedKMPH': 52
     }
-
 
 def report(sensorReader):
     readings = sensorReader()
