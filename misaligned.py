@@ -5,7 +5,7 @@ def generate_color_map():
 
     for i, major in enumerate(major_colors):
         for j, minor in enumerate(minor_colors):
-            pair_number = i * len(minor_colors) + i
+            pair_number = i * len(minor_colors) + j
             color_map.append((pair_number, major, minor))
 
     return color_map
@@ -44,5 +44,6 @@ def test_print_color_map_fail():
     assert len(mock_print.calls) == 25  #value based testing
     assert mock_print.calls[0] == "0 | White  | Blue"  #interaction or Behavior Testing
     assert mock_print.calls[-1] == "24 | Violet | Slate"
+
 
 
